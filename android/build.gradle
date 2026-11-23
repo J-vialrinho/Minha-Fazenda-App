@@ -31,5 +31,19 @@ allprojects {
   }
 }
 
+// Windows: caminho curto para os objetos C++ (plugins/withCaminhoCurtoCmake.js).
+if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+  subprojects { sp ->
+    ['com.android.library', 'com.android.application'].each { id ->
+      sp.plugins.withId(id) {
+        sp.androidComponents.finalizeDsl { ext ->
+          ext.defaultConfig.externalNativeBuild.cmake.arguments.add('-DCMAKE_OBJECT_PATH_MAX=250')
+        }
+      }
+    }
+  }
+}
+
 apply plugin: "expo-root-project"
 apply plugin: "com.facebook.react.rootproject"
+
